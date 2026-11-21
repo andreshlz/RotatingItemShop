@@ -1,0 +1,13 @@
+name: RotatingItemShop
+version: 1.0.0
+main: com.custom.itemshop.RotatingItemShopPlugin
+api-version: '26.3'
+description: Rotating Item Shop with Combo Deals, Dynamic Selling, and Richest Leaderboards.
+commands:
+  shop:
+    description: Opens the Rotating Item Shop GUI.
+    usage: /shop
+  baltop:
+    description: View the Top 3 Richest Players.
+    aliases: [richest]
+    usage: /baltop
