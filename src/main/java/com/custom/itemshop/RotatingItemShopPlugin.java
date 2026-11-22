@@ -362,7 +362,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         for (String ex : cfg.getStringList(base + ".excluded-enchantments")) {
         excluded.add(ex.toLowerCase(Locale.ROOT));
         }
-        Registry registry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT);
+        Registry<Enchantments> registry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT);
         for (Enchantment enchantment : registry) {
         String keyName = enchantment.getKey().getKey().toLowerCase(Locale.ROOT);
         if (excluded.contains(keyName)) continue;
@@ -456,7 +456,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         comboOffers.clear();
         if (weightedCategories.isEmpty()) return;
         for (int c = 0; c < COMBO_SLOTS.length; c++) {
-        Set<ShopCatalogEntry> usedInBundle = new HashSet<>();
+        Set<String> usedInBundle = new HashSet<>();
         List<ItemStack> bundleItems = new ArrayList<>(4);
         List<String> itemNames = new ArrayList<>(4);
         long rawTotal = 0L;
