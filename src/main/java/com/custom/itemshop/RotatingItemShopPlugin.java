@@ -264,7 +264,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         weightedCategories.removeIf(cat -> cat.entries().isEmpty());
         // Fallback safety
         if (weightedCategories.isEmpty()) {
-        List fallback = new ArrayList<>();
+        List<ShopCatalogEntry> fallback = new ArrayList<>();
         fallback.add(new ShopCatalogEntry(new ItemStack(Material.DIAMOND, 1), "Diamond", 250L, "Default", NamedTextColor.WHITE));
         weightedCategories.add(new WeightedCategory("Default", 100, fallback));
         }
@@ -277,7 +277,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         int defaultWeight
         ) {
         int weight = Math.max(0, cfg.getInt(path + ".weight", defaultWeight));
-        List entries = new ArrayList<>();
+        List<ShopCatalogEntry> entries = new ArrayList<>();
         for (String rawEntry : cfg.getStringList(path + ".items")) {
         ShopCatalogEntry parsed = parseCatalogEntry(rawEntry, displayTitle, tierColor);
         if (parsed != null) {
@@ -388,7 +388,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         String base = "buy-categories.creative-items";
         long defaultPrice = cfg.getLong(base + ".default-spawn-egg-price", 2500L);
         long rarePrice = cfg.getLong(base + ".rare-spawn-egg-price", 5000L);
-        Set rareKeywords = new HashSet<>();
+        Set<String> rareKeywords = new HashSet<>();
         for (String kw : cfg.getStringList(base + ".rare-spawn-egg-keywords")) {
         rareKeywords.add(kw.toUpperCase(Locale.ROOT));
         }
@@ -408,7 +408,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         // =========================================================================
         // WEIGHTED CATEGORY ROLLER (40% / 30% / 20% / 10%)
         // =========================================================================
-        private ShopCatalogEntry rollWeightedEntry(Set usedDisplayNames) {
+        private ShopCatalogEntry rollWeightedEntry(Set<String> usedDisplayNames) {
         int totalWeight = 0;
         for (WeightedCategory cat : weightedCategories) {
         totalWeight += cat.weight();
@@ -422,7 +422,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         for (WeightedCategory cat : weightedCategories) {
         cumulative += cat.weight();
         if (roll < cumulative) {
-        List pool = cat.entries();
+        List<ShopCatalogEntry> pool = cat.entries();
         ShopCatalogEntry picked = pool.get(ThreadLocalRandom.current().nextInt(pool.size()));
         lastRolled = picked;
         if (!usedDisplayNames.contains(picked.displayName())) {
@@ -438,7 +438,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         private void restockSingleItems() {
         singleOffers.clear();
         if (weightedCategories.isEmpty()) return;
-        Set usedNames = new HashSet<>();
+        Set<String> usedNames = new HashSet<>();
         for (int i = 0; i < SINGLE_SLOTS.length; i++) {
         ShopCatalogEntry entry = rollWeightedEntry(usedNames);
         if (entry != null) {
@@ -456,9 +456,9 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         comboOffers.clear();
         if (weightedCategories.isEmpty()) return;
         for (int c = 0; c < COMBO_SLOTS.length; c++) {
-        Set usedInBundle = new HashSet<>();
-        List bundleItems = new ArrayList<>(4);
-        List itemNames = new ArrayList<>(4);
+        Set<ShopCatalogEntry> usedInBundle = new HashSet<>();
+        List<ItemStack> bundleItems = new ArrayList<>(4);
+        List<String> itemNames = new ArrayList<>(4);
         long rawTotal = 0L;
         for (int i = 0; i < 4; i++) {
         ShopCatalogEntry entry = rollWeightedEntry(usedInBundle);
@@ -619,7 +619,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         meta.displayName(Component.text(offer.displayName(), offer.tierColor(), TextDecoration.BOLD)
         .decoration(TextDecoration.ITALIC, false));
         }
-        List lore = meta.hasLore() && meta.lore() != null
+        List<Component> lore = meta.hasLore() && meta.lore() != null
         ? new ArrayList<>(Objects.requireNonNull(meta.lore()))
         : new ArrayList<>();
         lore.add(Component.text("Category: ", NamedTextColor.DARK_GRAY)
@@ -654,7 +654,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         ItemMeta meta = display.getItemMeta();
         meta.displayName(Component.text(combo.title() + " (" + discountPercent + "% OFF!)", NamedTextColor.LIGHT_PURPLE, TextDecoration.BOLD)
         .decoration(TextDecoration.ITALIC, false));
-        List lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Includes 4 Items:", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
         for (String itemLine : combo.itemDescriptions()) {
         lore.add(Component.text(" • " + itemLine, NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
@@ -709,7 +709,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         ItemMeta sellHandMeta = sellHandBtn.getItemMeta();
         sellHandMeta.displayName(Component.text("Sell Held Item", NamedTextColor.YELLOW, TextDecoration.BOLD)
         .decoration(TextDecoration.ITALIC, false));
-        List handLore = new ArrayList<>();
+        List<Component> handLore = new ArrayList<>();
         if (handValue > 0) {
         handLore.add(Component.text("Holding: ", NamedTextColor.GRAY)
         .append(Component.text(handItem.getAmount() + "x " + formatMaterialName(handItem.getType()), NamedTextColor.WHITE))
@@ -865,7 +865,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         ItemMeta meta = tagged.getItemMeta();
         if (meta != null) {
         meta.getPersistentDataContainer().set(nonRefundableKey, PersistentDataType.BYTE, (byte) 1);
-        List lore = meta.hasLore() && meta.lore() != null
+        List<Component> lore = meta.hasLore() && meta.lore() != null
         ? new ArrayList<>(Objects.requireNonNull(meta.lore()))
         : new ArrayList<>();
         lore.add(Component.text("Non-Refundable (Shop Item)", NamedTextColor.DARK_RED)
@@ -1215,7 +1215,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         }
         return sb.toString();
         }
-        private record WeightedCategory(String name, int weight, List entries) {}
+        private record WeightedCategory(String name, int weight, List<ShopCatalogEntry> entries) {}
         private record ShopCatalogEntry(
         ItemStack item,
         String displayName,
@@ -1233,8 +1233,8 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         private record ComboOffer(
         String title,
         Material iconMaterial,
-        List items,
-        List itemDescriptions,
+        List<ItemStack> items,
+        List<String> itemDescriptions,
         long originalPrice,
         long discountedPrice
         ) {}
