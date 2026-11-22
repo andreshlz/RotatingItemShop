@@ -237,8 +237,8 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         }
         }
         }
-        }
-        private void buildWeightedCategoriesFromConfig(FileConfiguration cfg) {
+    }
+    private void buildWeightedCategoriesFromConfig(FileConfiguration cfg) {
         weightedCategories.clear();
         // 1. 40% Tier: Armor & Tools
         loadCategorySection(cfg, "buy-categories.armor-tools", "Armor & Tools", NamedTextColor.AQUA, 40);
@@ -268,8 +268,8 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         fallback.add(new ShopCatalogEntry(new ItemStack(Material.DIAMOND, 1), "Diamond", 250L, "Default", NamedTextColor.WHITE));
         weightedCategories.add(new WeightedCategory("Default", 100, fallback));
         }
-        }
-        private WeightedCategory loadCategorySection(
+    }
+    private WeightedCategory loadCategorySection(
         FileConfiguration cfg,
         String path,
         String displayTitle,
@@ -935,8 +935,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         return itemCategoryPrices.getOrDefault("default-item", 8L);
         }
         private long getArmorBaseValue(Material material) {
-        String
-        name = material.name();
+        String name = material.name();
         if (name.startsWith("NETHERITE_")) return armorTierSellPrices.getOrDefault("NETHERITE", 1000L);
         if (name.startsWith("DIAMOND_")) return armorTierSellPrices.getOrDefault("DIAMOND", 750L);
         if (name.startsWith("GOLDEN_")) return armorTierSellPrices.getOrDefault("GOLDEN", 500L);
