@@ -2,74 +2,182 @@
 # RotatingItemShop Configuration (Paper 26.3)
 # ==============================================================================
 
-# Restock timers in seconds
 timers:
-  single-items-seconds: 150   # Default: 150s (2m 30s)
-  combo-deals-seconds: 300    # Default: 300s (5m 00s)
-  auto-save-minutes: 5        # How often balances.yml saves automatically
+  single-items-seconds: 150   # 2m 30s
+  combo-deals-seconds: 300    # 5m 00s
+  auto-save-minutes: 5
 
-# Currency & Economy Settings
 economy:
   starting-balance: 0
   currency-symbol: "$"
   combo-discount-percent: 50  # 50% off total bundle value
 
-# Keybind Shortcuts
 shortcuts:
   sneak-swap-hands-opens-shop: true   # Shift + F opens /shop
   sneak-drop-opens-top3: true         # Shift + Q opens Top 3 Leaderboard
 
-# Buy Rotation Settings
-buy-rotation:
-  allow-placeable-blocks: false       # Keep false to prevent blocks in buy rotation
-  include-spawn-eggs: true
-  default-spawn-egg-price: 950
-  rare-spawn-egg-price: 2500
-  rare-spawn-eggs:
-    - VILLAGER_SPAWN_EGG
-    - ALLAY_SPAWN_EGG
-    - SNIFFER_SPAWN_EGG
+display:
+  live-actionbar: true
 
-  # Max-level Enchanted Book pricing by max enchantment level
-  enchanted-book-prices:
-    level-1: 1200   # e.g. Mending, Silk Touch, Infinity
-    level-2: 1400
-    level-3: 1650   # e.g. Fortune III, Unbreaking III, Looting III
-    level-4: 1950   # e.g. Protection IV
-    level-5-plus: 2400 # e.g. Sharpness V, Efficiency V, Power V
+# ==============================================================================
+# Weighted Buy Categories (Must total 100 for exact percentages)
+# ==============================================================================
+buy-categories:
 
-  # Single & Combo Buy Pool (MATERIAL:AMOUNT:PRICE)
-  items:
-    - "DIAMOND:4:250"
-    - "EMERALD:8:200"
-    - "NETHERITE_INGOT:1:1800"
-    - "NETHERITE_SCRAP:2:750"
-    - "GOLDEN_APPLE:4:300"
-    - "ENCHANTED_GOLDEN_APPLE:1:3500"
-    - "ENDER_PEARL:8:160"
-    - "BLAZE_ROD:6:240"
-    - "GHAST_TEAR:2:400"
-    - "TOTEM_OF_UNDYING:1:2800"
-    - "ELYTRA:1:6500"
-    - "TRIDENT:1:3200"
-    - "HEART_OF_THE_SEA:1:3000"
-    - "NETHER_STAR:1:5000"
-    - "EXPERIENCE_BOTTLE:32:320"
-    - "FIREWORK_ROCKET:32:160"
-    - "DIAMOND_SWORD:1:600"
-    - "DIAMOND_PICKAXE:1:750"
-    - "DIAMOND_CHESTPLATE:1:1100"
-    - "NETHERITE_UPGRADE_SMITHING_TEMPLATE:1:2200"
-    - "WIND_CHARGE:16:240"
-    - "MACE:1:7500"
+  # ----------------------------------------------------------------------------
+  # TIER 1: 40% Chance - Armor & Tools
+  # Format: "MATERIAL:AMOUNT:PRICE"
+  # ----------------------------------------------------------------------------
+  armor-tools:
+    weight: 40
+    items:
+      - "DIAMOND_HELMET:1:650"
+      - "DIAMOND_CHESTPLATE:1:1100"
+      - "DIAMOND_LEGGINGS:1:950"
+      - "DIAMOND_BOOTS:1:600"
+      - "DIAMOND_SWORD:1:600"
+      - "DIAMOND_PICKAXE:1:750"
+      - "DIAMOND_AXE:1:750"
+      - "DIAMOND_SHOVEL:1:450"
+      - "NETHERITE_HELMET:1:2400"
+      - "NETHERITE_CHESTPLATE:1:3600"
+      - "NETHERITE_LEGGINGS:1:3200"
+      - "NETHERITE_BOOTS:1:2200"
+      - "NETHERITE_SWORD:1:2500"
+      - "NETHERITE_PICKAXE:1:2800"
+      - "NETHERITE_AXE:1:2800"
+      - "BOW:1:350"
+      - "CROSSBOW:1:450"
+      - "SHIELD:1:250"
+      - "TRIDENT:1:3200"
+      - "MACE:1:7500"
+      - "ELYTRA:1:6500"
+      - "DIAMOND_HORSE_ARMOR:1:1500"
+      - "NETHERITE_HORSE_ARMOR:1:2000"
+      - "DIAMOND_NAUTILUS_ARMOR:1:1500"
+      - "NETHERITE_NAUTILUS_ARMOR:1:2000"
 
+  # ----------------------------------------------------------------------------
+  # TIER 2: 30% Chance - Potions, Max-Level Enchanted Books & High-Saturation Foods
+  # Standard Format: "MATERIAL:AMOUNT:PRICE"
+  # Potion Format:   "POTION:POTION_TYPE:MODIFIER:AMOUNT:PRICE"
+  #   Modifiers: NORMAL, LONG (extended duration), STRONG (Level II)
+  # ----------------------------------------------------------------------------
+  consumables-enchants:
+    weight: 30
+    include-max-enchanted-books: true
+    enchanted-book-prices:
+      level-1: 1200
+      level-2: 1400
+      level-3: 1650
+      level-4: 1950
+      level-5-plus: 2400
+    excluded-enchantments:
+      - binding_curse
+      - vanishing_curse
+    items:
+      # High-Saturation Foods
+      - "GOLDEN_CARROT:16:320"
+      - "COOKED_BEEF:32:240"
+      - "COOKED_PORKCHOP:32:240"
+      - "GOLDEN_APPLE:4:450"
+      - "ENCHANTED_GOLDEN_APPLE:1:3500"
+      - "SUSPICIOUS_STEW:4:220"
+      # Potions
+      - "POTION:STRENGTH:STRONG:1:550"
+      - "POTION:SWIFTNESS:STRONG:1:400"
+      - "POTION:REGENERATION:STRONG:1:600"
+      - "POTION:HEALING:STRONG:1:450"
+      - "POTION:FIRE_RESISTANCE:LONG:1:500"
+      - "POTION:NIGHT_VISION:LONG:1:350"
+      - "POTION:INVISIBILITY:LONG:1:500"
+      - "POTION:WATER_BREATHING:LONG:1:350"
+      - "POTION:SLOW_FALLING:LONG:1:450"
+      - "POTION:LEAPING:STRONG:1:400"
+      - "POTION:TURTLE_MASTER:STRONG:1:750"
+
+  # ----------------------------------------------------------------------------
+  # TIER 3: 20% Chance - Rare Collectibles, Armor Trims, Music Discs & Ore Blocks
+  # ----------------------------------------------------------------------------
+  rare-collectibles-ores:
+    weight: 20
+    items:
+      # High-Value Ore & Mineral Blocks
+      - "DIAMOND_BLOCK:2:1800"
+      - "EMERALD_BLOCK:4:1600"
+      - "GOLD_BLOCK:4:1100"
+      - "IRON_BLOCK:8:900"
+      - "NETHERITE_BLOCK:1:7200"
+      - "ANCIENT_DEBRIS:2:1600"
+      - "DIAMOND_ORE:4:950"
+      - "EMERALD_ORE:4:900"
+      # Armor Trims & Smithing Templates
+      - "NETHERITE_UPGRADE_SMITHING_TEMPLATE:1:2200"
+      - "SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE:1:3500"
+      - "WARD_ARMOR_TRIM_SMITHING_TEMPLATE:1:2500"
+      - "SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE:1:2200"
+      - "RIB_ARMOR_TRIM_SMITHING_TEMPLATE:1:1800"
+      - "SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE:1:1800"
+      - "EYE_ARMOR_TRIM_SMITHING_TEMPLATE:1:1800"
+      - "VEX_ARMOR_TRIM_SMITHING_TEMPLATE:1:2000"
+      - "TIDE_ARMOR_TRIM_SMITHING_TEMPLATE:1:1800"
+      - "BOLT_ARMOR_TRIM_SMITHING_TEMPLATE:1:1800"
+      - "FLOW_ARMOR_TRIM_SMITHING_TEMPLATE:1:1800"
+      # Music Discs
+      - "MUSIC_DISC_PIGSTEP:1:2400"
+      - "MUSIC_DISC_OTHERSIDE:1:2200"
+      - "MUSIC_DISC_5:1:2000"
+      - "MUSIC_DISC_RELIC:1:2000"
+      - "MUSIC_DISC_CREATOR:1:2200"
+      - "MUSIC_DISC_PRECIPICE:1:2000"
+      - "MUSIC_DISC_CAT:1:1200"
+      - "MUSIC_DISC_BLOCKS:1:1200"
+      # Rare Treasures
+      - "BEACON:1:5500"
+      - "NETHER_STAR:1:5000"
+      - "HEART_OF_THE_SEA:1:3000"
+      - "TOTEM_OF_UNDYING:1:2800"
+      - "DRAGON_BREATH:4:1200"
+      - "ECHO_SHARD:4:1400"
+      - "HEAVY_CORE:1:4800"
+
+  # ----------------------------------------------------------------------------
+  # TIER 4: 10% Chance - Creative-Only Items & Spawn Eggs
+  # ----------------------------------------------------------------------------
+  creative-items:
+    weight: 10
+    include-all-spawn-eggs: true
+    default-spawn-egg-price: 2500
+    rare-spawn-egg-price: 5000
+    rare-spawn-egg-keywords:
+      - VILLAGER
+      - ALLAY
+      - SNIFFER
+      - WARDEN
+      - ENDER_DRAGON
+      - WITHER
+      - IRON_GOLEM
+      - MOOSHROOM
+    items:
+      - "SPAWNER:1:12000"
+      - "TRIAL_SPAWNER:1:14000"
+      - "BARRIER:4:8000"
+      - "LIGHT:16:3500"
+      - "BEDROCK:1:15000"
+      - "BUDDING_AMETHYST:2:4500"
+      - "END_PORTAL_FRAME:1:20000"
+      - "REINFORCED_DEEPSLATE:4:6000"
+      - "DEBUG_STICK:1:10000"
+      - "COMMAND_BLOCK:1:25000"
+      - "STRUCTURE_VOID:16:4000"
+
+# ==============================================================================
 # Selling Rules & Dynamic Pricing Tiers
+# ==============================================================================
 selling:
   allow-blocks: true
   block-non-refundable-tag: true
 
-  # Horse & Nautilus Armor Sell Prices ($150 - $1,000)
-  # Buy price in shop is automatically 2x these values
   armor-tiers:
     LEATHER: 150
     COPPER: 250
@@ -78,17 +186,16 @@ selling:
     DIAMOND: 750
     NETHERITE: 1000
 
-  # Block Sell Price Overrides ($10 - $500)
   blocks:
     default-block-price: 15
-    common-blocks-price: 12     # Dirt, Cobblestone, Sand, Stone, Gravel, etc.
-    logs-and-wood-price: 22     # All *_LOG, *_WOOD, *_STEM, *_HYPHAE
-    flowers-price: 18           # Dandelion, Poppy, Tulips, Orchids, etc.
-    decorative-stone-price: 55  # Terracotta, Stone Bricks, Quartz, Prismarine
-    obsidian-price: 100         # Obsidian, Crying Obsidian, Gilded Blackstone
+    common-blocks-price: 12
+    logs-and-wood-price: 22
+    flowers-price: 18
+    decorative-stone-price: 55
+    obsidian-price: 100
     standard-ore-price: 65
     precious-ore-price: 90
-    gem-ore-price: 150          # Diamond & Emerald Ore
+    gem-ore-price: 150
     specific:
       BEACON: 500
       NETHERITE_BLOCK: 500
@@ -101,7 +208,6 @@ selling:
       REDSTONE_BLOCK: 120
       COPPER_BLOCK: 120
 
-  # Standard Item Sell Prices ($5 - $2,500+)
   items:
     default-item-price: 8
     crops-and-seeds-price: 5
