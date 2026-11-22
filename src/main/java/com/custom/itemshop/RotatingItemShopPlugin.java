@@ -362,7 +362,7 @@ public final class RotatingItemShopPlugin extends JavaPlugin implements Listener
         for (String ex : cfg.getStringList(base + ".excluded-enchantments")) {
         excluded.add(ex.toLowerCase(Locale.ROOT));
         }
-        Registry<Enchantments> registry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT);
+        Registry<Enchantment> registry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT);
         for (Enchantment enchantment : registry) {
         String keyName = enchantment.getKey().getKey().toLowerCase(Locale.ROOT);
         if (excluded.contains(keyName)) continue;
